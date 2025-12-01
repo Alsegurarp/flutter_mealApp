@@ -4,16 +4,21 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:meal_app/models/category.dart';
 
 class CategoryGridItem extends StatelessWidget {
-  const CategoryGridItem({super.key, required this.category});
+  const CategoryGridItem({
+    super.key,
+    required this.category,
+    required this.onSelectedCategory,
+  });
   // Aqui se declara que se aceptan los props, pero ya hay una variable que solicita esa data externa, por lo que ambas partes deben de estar
 
   // Debe aceptar data externa - los props los debe de aceptar aqui
   final Category category;
+  final void Function() onSelectedCategory;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onSelectedCategory,
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(8),
       child: Container(
