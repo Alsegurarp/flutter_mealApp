@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:meal_app/data/dummy_data.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:meal_app/models/meal.dart';
+import 'package:meal_app/providers/favorites_meals_provider.dart';
+import 'package:meal_app/providers/meals_provider.dart';
 
 // imagenes, ingredientes y pasos
-class SpecificinfoScreen extends StatelessWidget {
-  const SpecificinfoScreen({
-    super.key,
-    required this.meal,
-    required this.onToggleFavorite,
-  });
+class SpecificinfoScreen extends ConsumerWidget {
+  const SpecificinfoScreen({super.key, required this.meal});
 
   final Meal meal;
-  final void Function(Meal meal) onToggleFavorite;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
           IconButton(
             onPressed: () {
-              onToggleFavorite(meal);
+              ref
+                  .read(favoritesMealsProvider.notifier)
+                  .toggleMealFavoriteStatus(meal);
             },
             icon: Icon(Icons.star_border),
           ),

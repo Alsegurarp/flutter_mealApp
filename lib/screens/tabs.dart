@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:meal_app/models/meal.dart';
+import 'package:meal_app/providers/favorites_meals_provider.dart';
 import 'package:meal_app/providers/meals_provider.dart';
 import 'package:meal_app/screens/categories.dart';
 import 'package:meal_app/screens/filters.dart';
@@ -24,33 +25,7 @@ class TabsSreen extends ConsumerStatefulWidget {
 
 class _TabsScreenState extends ConsumerState<TabsSreen> {
   int _selectedPageIndex = 0;
-  final List<Meal> _favoriteMeals = [];
-
   Map<Filter, bool> _selectedFilters = kInitialFilters;
-
-  void _toggleMealFavoriteStatus(Meal meal) {
-    final isExisting = _favoriteMeals.contains(meal);
-
-    void _notifyFavorite(String message) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
-    }
-
-    if (isExisting) {
-      setState(() {
-        _favoriteMeals.remove(meal);
-      });
-      _notifyFavorite('Meal is no longer favorite');
-    } else {
-      setState(() {
-        _favoriteMeals.add(meal);
-        _selectedPageIndex = 1;
-      });
-      _notifyFavorite('Meal is one of your favorites');
-    }
-  }
 
   void _selectPage(int index) {
     setState(() {
@@ -93,17 +68,12 @@ class _TabsScreenState extends ConsumerState<TabsSreen> {
       return true; // This for the meal that passes the filter
     }).toList();
 
-    Widget activePage = CategoriesScreen(
-      onToggleFavorite: _toggleMealFavoriteStatus,
-      availableMeals: filteredMeals,
-    );
+    Widget activePage = CategoriesScreen(availableMeals: filteredMeals);
     var activePageTile = 'Categories';
 
     if (_selectedPageIndex == 1) {
-      activePage = MealsScreen(
-        meals: _favoriteMeals,
-        onToggleFavorite: _toggleMealFavoriteStatus,
-      );
+      final favoriteMeals = ref.watch(favoritesMealsProvider);
+      activePage = MealsScreen(meals: favoriteMeals, title: 'Favorites');
       activePageTile = 'Favorites';
     }
 

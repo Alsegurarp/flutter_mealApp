@@ -21,4 +21,5 @@ class FavoriteMealsNotifier extends Notifier<List<Meal>> {
 final favoritesMealsProvider =
     NotifierProvider<FavoriteMealsNotifier, List<Meal>>(
       FavoriteMealsNotifier.new,
-    );
+    ); // to use this data, we need to instantiate this
+    // this NotifierProvider is specting a function. 
