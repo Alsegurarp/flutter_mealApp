@@ -4,22 +4,15 @@ import 'package:meal_app/screens/specificInfo.dart';
 import 'package:meal_app/widgets/meal_item.dart';
 
 class MealsScreen extends StatelessWidget {
-  const MealsScreen({
-    super.key,
-    this.title,
-    required this.meals,
-  });
+  const MealsScreen({super.key, this.title, required this.meals});
 
   final String? title;
   final List<Meal> meals;
 
   void selectedMeal(BuildContext context, Meal meal) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (ctx) =>
-            SpecificinfoScreen(meal: meal),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (ctx) => SpecificinfoScreen(meal: meal)));
   }
 
   @override
@@ -27,16 +20,17 @@ class MealsScreen extends StatelessWidget {
     Widget content = Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Oh no, no hay informacion',
+            'No meal to show.',
             style: Theme.of(context).textTheme.headlineLarge!.copyWith(
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           SizedBox(height: 24),
           Text(
-            'Verifica que la informacion es correcta (O la api)',
+            'Assign meals to your favorites so you can see them here',
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
               color: Theme.of(context).colorScheme.onSurface,
             ),

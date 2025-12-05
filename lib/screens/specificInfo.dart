@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:meal_app/models/meal.dart';
 import 'package:meal_app/providers/favorites_meals_provider.dart';
-import 'package:meal_app/providers/meals_provider.dart';
 
 // imagenes, ingredientes y pasos
 class SpecificinfoScreen extends ConsumerWidget {
@@ -19,11 +18,20 @@ class SpecificinfoScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () {
-              ref
+              final wasAdded = ref
                   .read(favoritesMealsProvider.notifier)
                   .toggleMealFavoriteStatus(meal);
+              ScaffoldMessenger.of(context).clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    wasAdded ? 'Meal add as a favorite.' : 'Meal removed.',
+                  ),
+                ),
+              );
             },
-            icon: Icon(Icons.star_border),
+            icon:
+                Icon(Icons.star_border),
           ),
         ],
       ),
