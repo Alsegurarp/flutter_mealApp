@@ -5,13 +5,38 @@ import 'package:meal_app/screens/meals.dart';
 import 'package:meal_app/widgets/new_category_grid_item.dart';
 import 'package:meal_app/models/category.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key, this.availableMeals});
 
   final List<Meal>? availableMeals;
 
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> with SingleTickerProviderStateMixin {
+    // with - keyword that allows us to mix class - and to use an explicit animation...
+    // SingleTickerProviderStateMixin as to be mixed with this class
+    // if i have several animations, then use the TickerProviderStateMixin, for 1, always the Single
+
+    late AnimationController _animationController; 
+    // late keyword - used to tell Dart - This variable will have a value
+    // as soon as it's being used the first time but not yet when the class is created
+    // but we must declare the typeOfValue - This case, AnimationController
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: //parameter that makes sure that this animation executes for every frame
+      // to overall provider a smooth animation
+    ); // to create an object based on that class
+  }
+
+
+
   void _selectCategory(BuildContext context, Category category) {
-    final filteredList = availableMeals!
+    final filteredList = widget.availableMeals!
         .where((meal) => meal.categories.contains(category.id))
         .toList(); // se hace un filtro en la lista de comidas - cada una de las meals tiene diferente id en su categoria
     // Si es la categoria que estoy invocando (a la que hice tap), es true, pasa el filtro y me muestra esa lista de comida
