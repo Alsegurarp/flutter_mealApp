@@ -14,26 +14,35 @@ class CategoriesScreen extends StatefulWidget {
   State<CategoriesScreen> createState() => _CategoriesScreenState();
 }
 
-class _CategoriesScreenState extends State<CategoriesScreen> with SingleTickerProviderStateMixin {
-    // with - keyword that allows us to mix class - and to use an explicit animation...
-    // SingleTickerProviderStateMixin as to be mixed with this class
-    // if i have several animations, then use the TickerProviderStateMixin, for 1, always the Single
+class _CategoriesScreenState extends State<CategoriesScreen>
+    with SingleTickerProviderStateMixin {
+  // with - keyword that allows us to mix class - and to use an explicit animation...
+  // SingleTickerProviderStateMixin as to be mixed with this class
+  // if i have several animations, then use the TickerProviderStateMixin, for 1, always the Single
 
-    late AnimationController _animationController; 
-    // late keyword - used to tell Dart - This variable will have a value
-    // as soon as it's being used the first time but not yet when the class is created
-    // but we must declare the typeOfValue - This case, AnimationController
+  late AnimationController _animationController;
+  // late keyword - used to tell Dart - This variable will have a value
+  // as soon as it's being used the first time but not yet when the class is created
+  // but we must declare the typeOfValue - This case, AnimationController
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      vsync: //parameter that makes sure that this animation executes for every frame
-      // to overall provider a smooth animation
-    ); // to create an object based on that class
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+      lowerBound: 0,
+      upperBound: 1,
+    );
+
+    _animationController.forward(); // repeat
   }
 
-
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   void _selectCategory(BuildContext context, Category category) {
     final filteredList = widget.availableMeals!
@@ -52,23 +61,36 @@ class _CategoriesScreenState extends State<CategoriesScreen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    return GridView(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3 / 2,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
-      ), // This delegates how many columns you want
-      children: [
-        for (final categories in availableCategories)
-          CategoryGridItem(
-            category: categories,
-            onSelectedCategory: () {
-              _selectCategory(context, categories);
-            },
-          ),
-      ],
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) => SlideTransition(
+        position: Tween(begin: const Offset(0, 0.3), end: const Offset(0, 0))
+            .animate(
+              CurvedAnimation(
+                parent: _animationController,
+                curve: Easing.standardAccelerate,
+              ),
+            ),
+        child: child,
+      ),
+      child: GridView(
+        padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 3 / 2,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+        ), // This delegates how many columns you want
+        children: [
+          for (final categories in availableCategories)
+            CategoryGridItem(
+              category: categories,
+              onSelectedCategory: () {
+                _selectCategory(context, categories);
+              },
+            ),
+        ],
+      ),
     );
   }
 }
